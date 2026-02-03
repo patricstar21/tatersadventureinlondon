@@ -2510,17 +2510,23 @@
         if (IS_WINDOWS) gameContainer.classList.add('windows-platform');
 
         // Windows-only: nudge road/path to align with player baseline
-        function updatePathNudge() {
-        	if (!IS_WINDOWS) return;
-        	const pathEl = document.querySelector('.path');
-        	const playerEl = document.getElementById('taterContainer');
-        	if (!pathEl || !playerEl) return;
-        	const pathRect = pathEl.getBoundingClientRect();
-        	const playerRect = playerEl.getBoundingClientRect();
-        	let nudgePx = Math.round(pathRect.top - playerRect.bottom);
-        	nudgePx = Math.max(-16, Math.min(16, nudgePx));
-        	document.documentElement.style.setProperty('--path-nudge-px', nudgePx + 'px');
-        }
+		function updatePathNudge() {
+			if (!IS_WINDOWS) return;
+			const pathEl = document.querySelector('.path');
+			const taterEl = document.getElementById('tater');
+			if (!pathEl || !taterEl) return;
+
+			const pathRect = pathEl.getBoundingClientRect();
+			const taterRect = taterEl.getBoundingClientRect();
+
+			// Positive nudge moves the road UP (increases bottom).
+			// Align the road's top edge to Tater's visual feet baseline.
+			let nudgePx = Math.round(taterRect.bottom - pathRect.top);
+
+			nudgePx = Math.max(-16, Math.min(16, nudgePx));
+			document.documentElement.style.setProperty('--path-nudge-px', nudgePx + 'px');
+		}
+
         if (IS_WINDOWS) {
         	updatePathNudge();
         	window.addEventListener('resize', updatePathNudge, { passive: true });
