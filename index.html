@@ -1405,12 +1405,43 @@
 
         /* CHANGE (high-speed-visual): Dampen noisy idle animations at high speed to reduce eye strain */
         /* Only active when score >= 1000 AND reduce-motion is NOT enabled */
-        body.high-speed .sprite.thunder-idle,
-        body.high-speed .sprite.vacuum-idle,
-        body.high-speed .sprite.skateboard-idle,
+        body.high-speed .sprite.thunder-idle {
+            animation-duration: 0.3s; /* 2x slower (was 0.15s) */
+        }
+        body.high-speed .sprite.vacuum-idle {
+            animation-duration: 0.2s; /* 2.5x slower (was 0.08s) */
+        }
+        body.high-speed .sprite.skateboard-idle {
+            animation-duration: 0.6s; /* 2x slower (was 0.3s) */
+        }
         body.high-speed .sprite.cat-idle,
         body.high-speed .sprite.squirrel-idle {
             animation: none !important;
+        }
+        /* Dampened keyframes with reduced amplitude for high-speed mode */
+        @keyframes thunder-jitter-damped {
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -1px, 0); }
+        }
+        @keyframes vacuum-shake-damped {
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -0.5px, 0); }
+        }
+        @keyframes skateboard-roll-damped {
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, 1.5px, 0); } /* 25% reduced (was 2px) */
+        }
+        body.high-speed .sprite.thunder-idle {
+            animation-name: thunder-jitter-damped;
+            animation-duration: 0.3s;
+        }
+        body.high-speed .sprite.vacuum-idle {
+            animation-name: vacuum-shake-damped;
+            animation-duration: 0.2s;
+        }
+        body.high-speed .sprite.skateboard-idle {
+            animation-name: skateboard-roll-damped;
+            animation-duration: 0.6s;
         }
 
         /* Accessibility - High Contrast mode */
