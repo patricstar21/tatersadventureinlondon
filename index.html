@@ -4839,23 +4839,11 @@
                        // Step 4 tutorial - skip updates while tutorial is active
             // Visual hierarchy & pacing - Part B: skip updates during pre-run state
             if (!isPaused && !isGameOver && !inHitStop && !tutorialActive && !preRunState) {
-				// Anti-cluster: normalize frame-based recovery timing on Windows (use integer steps for stability)
-				if (IS_WINDOWS) {
-					frameCount += physSteps;
-				} else {
-					frameCount++;
-				}
+                            frameCount++; // Anti-cluster: increment frame counter for recovery tracking
+                            updateJumpCharge();
+                            updatePhysics();
+                            updateObstacles(IS_WINDOWS ? dtScaleSmoothed : 1);
 
-				let physSteps = 1;
-				if (IS_WINDOWS) {
-					physSteps = Math.max(1, Math.min(4, Math.round(dtScaleSmoothed)));
-				}
-				for (let i = 0; i < physSteps; i++) {
-					updateJumpCharge();
-					updatePhysics();
-				}
-
-				updateObstacles(IS_WINDOWS ? dtScaleSmoothed : 1);
 
                 updateAmbientRamp(score); // CHANGE (ambient-ramp): Smooth easing each frame
                 updateHighSpeedVisual(score); // CHANGE (high-speed-visual): Dampen noisy idle animations
