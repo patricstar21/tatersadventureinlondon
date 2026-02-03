@@ -2972,29 +2972,29 @@
                 durations.sort((a, b) => a - b);
                 const p95 = durations.length > 0 ? durations[Math.floor(durations.length * 0.95)] : 0;
                 const rectPerSec = perfRectReads / 2;
-const dtCapped = dtMsLast >= 69.9;
-const rawCapped = dtScaleRawLast >= 3.49;
-const smNearCap = dtScaleSmoothed >= 3.40;
+                const dtCapped = dtMsLast >= 69.9;
+                const rawCapped = dtScaleRawLast >= 3.49;
+                const smNearCap = dtScaleSmoothed >= 3.40;
 
-let capTag = '';
-if (dtCapped || rawCapped) {
-	capTag = ' CAP';
-	if (dtCapped) capTag += ':dtMax';
-	if (rawCapped) capTag += ':rawMax';
-	if (smNearCap) capTag += ':smHigh';
-}
+                let capTag = '';
+                if (dtCapped || rawCapped) {
+                    capTag = ' CAP';
+                    if (dtCapped) capTag += ':dtMax';
+                    if (rawCapped) capTag += ':rawMax';
+                    if (smNearCap) capTag += ':smHigh';
+                }
 
-console.log(`[win-perf] fps:${fps.toFixed(1)} avg:${avg.toFixed(1)}ms p95:${p95.toFixed(1)}ms dt:${dtMsLast.toFixed(1)} raw:${dtScaleRawLast.toFixed(2)} sm:${dtScaleSmoothed.toFixed(2)} rect/s:${rectPerSec.toFixed(0)} obs:${obstacles.length} pwr:${powerups.length}${capTag}`);
+                console.log(`[win-perf] fps:${fps.toFixed(1)} avg:${avg.toFixed(1)}ms p95:${p95.toFixed(1)}ms dt:${dtMsLast.toFixed(1)} raw:${dtScaleRawLast.toFixed(2)} sm:${dtScaleSmoothed.toFixed(2)} rect/s:${rectPerSec.toFixed(0)} obs:${obstacles.length} pwr:${powerups.length}${capTag}`);
 
-// If we keep pegging caps, call it out clearly (diagnostic only)
-if (rawCapped && dtCapped && fps < 20) {
-	perfCapPegIntervals++;
-	if (perfCapPegIntervals === 3) {
-		console.log('[win-perf] NOTE: dtScale is pegged at caps. If this machine is <~17fps, the game will still feel slow unless caps are raised.');
-	}
-} else {
-	perfCapPegIntervals = 0;
-}
+                // If we keep pegging caps, call it out clearly (diagnostic only)
+                if (rawCapped && dtCapped && fps < 20) {
+                    perfCapPegIntervals++;
+                    if (perfCapPegIntervals === 3) {
+                        console.log('[win-perf] NOTE: dtScale is pegged at caps. If this machine is <~17fps, the game will still feel slow unless caps are raised.');
+                    }
+                } else {
+                    perfCapPegIntervals = 0;
+                }
                 // Low-paint auto-toggle
                 if (fps < 50) {
                     lowPaintBelowCount++;
