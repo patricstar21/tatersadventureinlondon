@@ -4840,8 +4840,14 @@
             // Visual hierarchy & pacing - Part B: skip updates during pre-run state
             if (!isPaused && !isGameOver && !inHitStop && !tutorialActive && !preRunState) {
                             frameCount++; // Anti-cluster: increment frame counter for recovery tracking
-                            updateJumpCharge();
-                            updatePhysics();
+				let physSteps = 1;
+				if (IS_WINDOWS) {
+					physSteps = Math.max(1, Math.min(4, Math.round(dtScaleSmoothed)));
+				}
+				for (let i = 0; i < physSteps; i++) {
+					updateJumpCharge();
+					updatePhysics();
+				}
                             updateObstacles(IS_WINDOWS ? dtScaleSmoothed : 1);
 
 
