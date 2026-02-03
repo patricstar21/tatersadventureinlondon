@@ -4805,7 +4805,8 @@
                 lastFrameTime = perfNowFrame;
 				// rawScale: 0.6 (fast frames) to 3.5 (handles ~17fps: 58/16.67=3.5)
 				const rawScale = Math.max(0.6, Math.min(3.5, dtMs / 16.6667));
-                dtScaleSmoothed = dtScaleSmoothed * 0.9 + rawScale * 0.1;
+					const alpha = (rawScale > dtScaleSmoothed) ? 0.25 : 0.10;
+					dtScaleSmoothed = dtScaleSmoothed + (rawScale - dtScaleSmoothed) * alpha;
                 // Diagnostics (read by perf probe)
                 dtMsLast = dtMs;
                 dtScaleRawLast = rawScale;
