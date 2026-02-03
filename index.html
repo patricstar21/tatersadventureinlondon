@@ -4845,8 +4845,15 @@
 				} else {
 					frameCount++;
 				}
-				updateJumpCharge();
-				updatePhysics();
+				let physSteps = 1;
+				if (IS_WINDOWS) {
+					physSteps = Math.max(1, Math.min(4, Math.round(dtScaleSmoothed)));
+				}
+				for (let i = 0; i < physSteps; i++) {
+					updateJumpCharge();
+					updatePhysics();
+				}
+
 				updateObstacles(IS_WINDOWS ? dtScaleSmoothed : 1);
 
                 updateAmbientRamp(score); // CHANGE (ambient-ramp): Smooth easing each frame
