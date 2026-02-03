@@ -4839,7 +4839,12 @@
                        // Step 4 tutorial - skip updates while tutorial is active
             // Visual hierarchy & pacing - Part B: skip updates during pre-run state
             if (!isPaused && !isGameOver && !inHitStop && !tutorialActive && !preRunState) {
-				frameCount++; // Anti-cluster: increment frame counter for recovery tracking
+				// Anti-cluster: normalize frame-based recovery timing on Windows (fps may be capped at ~30)
+				if (IS_WINDOWS) {
+					frameCount += dtScaleSmoothed;
+				} else {
+					frameCount++;
+				}
 				updateJumpCharge();
 				updatePhysics();
 				updateObstacles(IS_WINDOWS ? dtScaleSmoothed : 1);
