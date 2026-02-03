@@ -4799,12 +4799,12 @@
                 const perfNowFrame = performance.now();
                 let dtMs = 16.6667; // default to 60fps
                 if (lastFrameTime !== null) {
-                // Clamp dtMs: 10ms (~100fps) to 100ms (~10fps safety cap)
-					dtMs = Math.max(10, Math.min(100, perfNowFrame - lastFrameTime));
+                // Clamp dtMs: 10ms (~100fps) to 70ms (~14fps safety cap)
+					dtMs = Math.max(10, Math.min(70, perfNowFrame - lastFrameTime));
                 }
                 lastFrameTime = perfNowFrame;
-				// rawScale: 0.6 (fast frames) to 6.0 (handles ~17fps: 58/16.67=3.5)
-				const rawScale = Math.max(0.6, Math.min(6.0, dtMs / 16.6667));
+				// rawScale: 0.6 (fast frames) to 3.5 (handles ~17fps: 58/16.67=3.5)
+				const rawScale = Math.max(0.6, Math.min(3.5, dtMs / 16.6667));
                 dtScaleSmoothed = dtScaleSmoothed * 0.9 + rawScale * 0.1;
                 // Diagnostics (read by perf probe)
                 dtMsLast = dtMs;
