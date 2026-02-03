@@ -1405,39 +1405,12 @@
 
         /* CHANGE (high-speed-visual): Dampen noisy idle animations at high speed to reduce eye strain */
         /* Only active when score >= 1000 AND reduce-motion is NOT enabled */
-        body.high-speed .sprite.thunder-idle {
-            animation-duration: 0.3s; /* 2x slower (was 0.15s) */
-        }
-        body.high-speed .sprite.vacuum-idle {
-            animation-duration: 0.2s; /* 2.5x slower (was 0.08s) */
-        }
-        body.high-speed .sprite.skateboard-idle {
-            animation-duration: 0.6s; /* 2x slower (was 0.3s) */
-        }
-        /* Dampened keyframes with reduced amplitude for high-speed mode */
-        @keyframes thunder-jitter-damped {
-            0%, 100% { transform: translate3d(0, 0, 0); }
-            50% { transform: translate3d(0, -1px, 0); }
-        }
-        @keyframes vacuum-shake-damped {
-            0%, 100% { transform: translate3d(0, 0, 0); }
-            50% { transform: translate3d(0, -0.5px, 0); }
-        }
-        @keyframes skateboard-roll-damped {
-            0%, 100% { transform: translate3d(0, 0, 0); }
-            50% { transform: translate3d(0, 1.5px, 0); } /* 25% reduced (was 2px) */
-        }
-        body.high-speed .sprite.thunder-idle {
-            animation-name: thunder-jitter-damped;
-            animation-duration: 0.3s;
-        }
-        body.high-speed .sprite.vacuum-idle {
-            animation-name: vacuum-shake-damped;
-            animation-duration: 0.2s;
-        }
-        body.high-speed .sprite.skateboard-idle {
-            animation-name: skateboard-roll-damped;
-            animation-duration: 0.6s;
+        body.high-speed .sprite.thunder-idle,
+        body.high-speed .sprite.vacuum-idle,
+        body.high-speed .sprite.skateboard-idle,
+        body.high-speed .sprite.cat-idle,
+        body.high-speed .sprite.squirrel-idle {
+            animation: none !important;
         }
 
         /* Accessibility - High Contrast mode */
@@ -4803,8 +4776,8 @@
 					dtMs = Math.max(10, Math.min(70, perfNowFrame - lastFrameTime));
                 }
                 lastFrameTime = perfNowFrame;
-				// rawScale: 0.6 (fast frames) to 3.5 (handles ~17fps: 58/16.67=3.5)
-				const rawScale = Math.max(0.6, Math.min(3.5, dtMs / 16.6667));
+				// rawScale: 1.0 (never slow down) to 3.5 (handles ~17fps: 58/16.67=3.5)
+				const rawScale = Math.max(1.0, Math.min(3.5, dtMs / 16.6667));
 					const alpha = (rawScale > dtScaleSmoothed) ? 0.25 : 0.10;
 					dtScaleSmoothed = dtScaleSmoothed + (rawScale - dtScaleSmoothed) * alpha;
                 // Diagnostics (read by perf probe)
