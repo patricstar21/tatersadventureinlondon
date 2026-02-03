@@ -190,7 +190,7 @@
 
         .path {
             position: absolute;
-            bottom: calc(9% - 4%);
+            bottom: calc((9% - 4%) + var(--path-nudge-px, 0px));
             left: 0;
             width: 300%;
             height: 60px;
@@ -205,7 +205,7 @@
         }
         @media (max-width: 520px) {
   .path {
-    bottom: calc(18% - 4%);
+    bottom: calc((18% - 4%) + var(--path-nudge-px, 0px));
   }
 }
         .path.paused { animation-play-state: paused; }
@@ -1405,43 +1405,12 @@
 
         /* CHANGE (high-speed-visual): Dampen noisy idle animations at high speed to reduce eye strain */
         /* Only active when score >= 1000 AND reduce-motion is NOT enabled */
-        body.high-speed .sprite.thunder-idle {
-            animation-duration: 0.3s; /* 2x slower (was 0.15s) */
-        }
-        body.high-speed .sprite.vacuum-idle {
-            animation-duration: 0.2s; /* 2.5x slower (was 0.08s) */
-        }
-        body.high-speed .sprite.skateboard-idle {
-            animation-duration: 0.6s; /* 2x slower (was 0.3s) */
-        }
+        body.high-speed .sprite.thunder-idle,
+        body.high-speed .sprite.vacuum-idle,
+        body.high-speed .sprite.skateboard-idle,
         body.high-speed .sprite.cat-idle,
         body.high-speed .sprite.squirrel-idle {
             animation: none !important;
-        }
-        /* Dampened keyframes with reduced amplitude for high-speed mode */
-        @keyframes thunder-jitter-damped {
-            0%, 100% { transform: translate3d(0, 0, 0); }
-            50% { transform: translate3d(0, -1px, 0); }
-        }
-        @keyframes vacuum-shake-damped {
-            0%, 100% { transform: translate3d(0, 0, 0); }
-            50% { transform: translate3d(0, -0.5px, 0); }
-        }
-        @keyframes skateboard-roll-damped {
-            0%, 100% { transform: translate3d(0, 0, 0); }
-            50% { transform: translate3d(0, 1.5px, 0); } /* 25% reduced (was 2px) */
-        }
-        body.high-speed .sprite.thunder-idle {
-            animation-name: thunder-jitter-damped;
-            animation-duration: 0.3s;
-        }
-        body.high-speed .sprite.vacuum-idle {
-            animation-name: vacuum-shake-damped;
-            animation-duration: 0.2s;
-        }
-        body.high-speed .sprite.skateboard-idle {
-            animation-name: skateboard-roll-damped;
-            animation-duration: 0.6s;
         }
 
         /* Accessibility - High Contrast mode */
@@ -2530,6 +2499,24 @@
         // Windows platform detection for perf optimizations (robust: platform + userAgent)
         const IS_WINDOWS = /Win/.test(navigator.platform) || /Windows/.test(navigator.userAgent);
         if (IS_WINDOWS) gameContainer.classList.add('windows-platform');
+
+        // Windows-only: nudge road/path to align with player baseline
+        function updatePathNudge() {
+        	if (!IS_WINDOWS) return;
+        	const pathEl = document.querySelector('.path');
+        	const playerEl = document.getElementById('taterContainer');
+        	if (!pathEl || !playerEl) return;
+        	const pathRect = pathEl.getBoundingClientRect();
+        	const playerRect = playerEl.getBoundingClientRect();
+        	let nudgePx = Math.round(pathRect.top - playerRect.bottom);
+        	nudgePx = Math.max(-16, Math.min(16, nudgePx));
+        	document.documentElement.style.setProperty('--path-nudge-px', nudgePx + 'px');
+        }
+        if (IS_WINDOWS) {
+        	updatePathNudge();
+        	window.addEventListener('resize', updatePathNudge, { passive: true });
+        }
+
         const muteBtn = document.getElementById('muteBtn');
         const tutorialOverlay = document.getElementById('tutorialOverlay'); // Step 4 tutorial
         const hintBar = document.getElementById('hintBar'); // UI polish - hint bar reference
