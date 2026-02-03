@@ -2101,6 +2101,15 @@
 .low-paint .obstacle::after {
     display: none !important;
 }
+/* Low-paint: also disable continuous keyframe animations to recover FPS */
+.low-paint .sprite,
+.low-paint .tater,
+.low-paint .clouds,
+.low-paint .landmarks-far,
+.low-paint .landmarks-mid,
+.low-paint .park-elements {
+	animation: none !important;
+}
 
     </style>
 </head>
